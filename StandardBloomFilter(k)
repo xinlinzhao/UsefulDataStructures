@@ -12,11 +12,7 @@ class HashFunction:
         return cal
         
 class StandardBloomFilter:
-    """
-    @param: k: An integer
-    """
     def __init__(self, k):
-        # do intialization if necessary
         self.k = k 
         self.hashFunctions = []
         self.isExist = [False]*(10000+k)
@@ -24,22 +20,12 @@ class StandardBloomFilter:
         for i in range(k):
             self.hashFunctions.append(HashFunction(10000+i, 31+i*2))
         
-    """
-    @param: word: A string
-    @return: nothing
-    """
     def add(self, word):
-        # write your code here
         for i in range(self.k):
             cal = self.hashFunctions[i].calculate(word)
             self.isExist[cal] = True
 
-    """
-    @param: word: A string
-    @return: True if contains word
-    """
     def contains(self, word):
-        # write your code here
         for i in range(self.k):
             cal = self.hashFunctions[i].calculate(word)
             if self.isExist[cal] == False:
