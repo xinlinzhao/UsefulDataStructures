@@ -1,0 +1,39 @@
+class HashFunction:
+    def __init__(self, cap, seed):
+        self.cap = cap
+        self.seed = seed
+    
+    def calculate(self, word):
+        cal = 0
+        for letter in word:
+            cal = cal*self.seed + ord(letter)
+            cal %= self.cap
+        
+        return cal
+
+class CountingBloomFilter:
+    def __init__(self, k):
+        self.k = k 
+        self.hashFunctions = []
+        self.counts = [0]*(20000+k)
+        for i in range(k):
+            self.hashFunctions.append(HashFunction(20000+i, 31+i*2)) 
+
+    def add(self, word):
+        for func in self.hashFunctions:
+            cal = func.calculate(word)
+            self.counts[cal] += 1 
+
+    def remove(self, word):
+        for func in self.hashFunctions:
+            cal = func.calculate(word)
+            if self.counts[cal] > 0:
+                self.counts[cal] -= 1 
+
+    def contains(self, word):
+        for func in self.hashFunctions:
+            cal = func.calculate(word)
+            if self.counts[cal] <= 0:
+                return False
+        
+        return True
