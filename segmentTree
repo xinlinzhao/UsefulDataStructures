@@ -1,0 +1,63 @@
+class segmentTreeNode:
+  def __init__(self, start, end): 
+    self.start = start 
+    self.end = end
+    self.nodeSum = 0
+    self.left = None 
+    self.right = None 
+
+class segmentTree: 
+  def __init__(self): 
+    self.root = None 
+  
+  def buildTree(self, start, end): 
+    self.root = self.buildTreeDFS(start, end)
+
+  def buildTreeDFS(self, start, end): 
+    root = segmentTreeNode(start, end)
+    if start == end: 
+      return root 
+    
+    mid = (start + end) // 2 
+    root.left = self.buildTreeDFS(start, mid)
+    root.right = self.buildTreeDFS(mid+1, end)
+    return root 
+  
+  def addNode(self, index):
+    if self.root is None:
+      return 
+    
+    self.addNodeDFS(self.root, index)
+  
+  def addNodeDFS(self, root, index): 
+    if index == root.start and index == root.end: 
+      root.nodeSum += 1 
+      return 
+    
+    mid = (root.start + root.end) // 2 
+    if index <= mid:
+      self.addNodeDFS(root.left, index)
+    else:
+      self.addNodeDFS(root.right, index)
+    root.nodeSum = root.left.nodeSum + root.right.nodeSum
+    return 
+  
+  def query(self, num): 
+    if self.root is None:
+      return -1 
+    
+    return self.queryDFS(self.root, 0, num-1)
+  
+  def queryDFS(self, root, start, end):
+    if start > end:
+      return 0
+    if root.start == start and root.end == end: 
+      return root.nodeSum 
+    
+    mid = (root.start + root.end) // 2
+    if end <= mid:
+      return self.queryDFS(root.left, start, end)
+    elif start >= mid + 1: 
+      return self.queryDFS(root.right, start, end)
+    else: 
+      return self.queryDFS(root.left, start, mid) + self.queryDFS(root.right, mid+1, end)
