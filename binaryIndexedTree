@@ -1,0 +1,26 @@
+class binaryIndexedTree: 
+    def __init__(self, nums): 
+        self.orig = [0] * (max(nums) + 1) 
+        self.lenArr = len(self.orig) + 1 
+        self.arr = [0] * self.lenArr 
+    
+    def insert(self, num): 
+        self.orig[num] += 1 
+        self.add(num, 1) 
+    
+    def lowbit(self, x): 
+        return x & (-x) 
+    
+    def add(self, index, value): 
+        index += 1 
+        while index < self.lenArr: 
+            self.arr[index] += value 
+            index += self.lowbit(index) 
+    
+    def preSum(self, index): 
+        index += 1 
+        res = 0 
+        while index > 0: 
+            res += self.arr[index]
+            index -= self.lowbit(index)
+        return res 
